@@ -20,7 +20,7 @@ export default function MoviesCard({ card }) {
           <p className="card__duration">{card.duration}</p>
         </div>
         <div className="card__buttons">
-          {pathname === '/saved-movies' ? (
+          {pathname === '/savedMovies' ? (
             <button type="button" className="card__button card__button_delete" />
           ) : (
             <button
