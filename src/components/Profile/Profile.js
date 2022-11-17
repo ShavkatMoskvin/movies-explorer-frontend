@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import api from '../../utils/MainApi'
 import "./Profile.css"
 
-export default function Profile(props) {
-  const [name, enterName] = useState("");
-  const [email, enterEmail] = useState("");
+export default function Profile({ currentUser, signOut }) {
+  const [name, enterName] = useState(currentUser.name);
+  const [email, enterEmail] = useState(currentUser.email);
+  const [errorMessage, setErrorMessage] = useState();
+
+  useEffect(() => {
+    enterName(currentUser.name)
+    enterEmail(currentUser.email)
+  }, [currentUser])
 
   function handleChangeProfileName(evt) {
     enterName(evt.target.value);
@@ -16,8 +23,11 @@ export default function Profile(props) {
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    props.getProfile(name, email);
-  }
+    api.setUserInfo({ name, email })
+      .catch((err) => {
+        setErrorMessage(`Oшибка: ${err.status}. Что-то пошло не так!`)
+      });
+  };
 
   return (
     <>
@@ -54,18 +64,18 @@ export default function Profile(props) {
               onChange={handleChangeProfileEmail}
             />
           </div>
-          <Link
+          <span className="profile__error">{errorMessage}</span>
+          <button
             className="profile__button"
             type="submit"
             aria-label=""
-            to="/"
           >
             Редактировать
-          </Link>
+          </button>
         </form>
-        <Link className={"profile__button-logout"} to="/">
+        <button onClick={signOut} className={"profile__button-logout"}>
           Выйти из аккаунта
-        </Link>
+        </button>
       </div>
     </>
   );
