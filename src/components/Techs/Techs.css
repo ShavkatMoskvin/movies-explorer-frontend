@@ -111,10 +111,14 @@
     }
   
     .techs__title { 
-      padding: 1px 0 28px;
-      border-bottom: 1px solid #000;
+      margin-top: 0;
+      margin-bottom: 0px;
       font-size: 18px;
       line-height: 21px;
+    }
+
+    .techs__stroke-landing {
+      margin-top: 28px;
     }
   
     .techs__stack {
