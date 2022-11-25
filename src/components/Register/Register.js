@@ -10,7 +10,7 @@ export default function Register({register, errorMessage}) {
 
     const handleInputChange = (e) => {
         const target = e.target
-        const type = e.target.type
+        const type = e.target.name
         const value = e.target.value
 
         if (target === 'email') {
