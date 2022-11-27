@@ -72,7 +72,15 @@ export default function MoviesCardList({ cards, shortedMovies, setVisibleOnButto
         setNumberOfFilms(visibleCards)
     }, [windowWidth]);
 
-    const foundMovies = JSON.parse(localStorage.getItem('foundMovies'))
+    const foundMovies = () => {
+        try {
+            console.log('good')
+            return JSON.parse(localStorage.getItem('foundMovies') || '');
+        } catch (error) {
+            console.log('bad')
+            return null;
+        } 
+    }
  
     return (
         <section className="movies-card-list">

@@ -20,7 +20,7 @@ export default function SavedMovies() {
             .then(data => setSavedMovies(data))
 
     }, [])
-    
+
     function searchMovie(value) {
         const searchedMovies = savedMovies.filter((movie) => movie.nameRU.toLowerCase().includes(valueM.toLowerCase()))
         const foundMovies = value ? searchedMovies.filter((item) => item.duration <= 60) : searchedMovies
@@ -46,11 +46,14 @@ export default function SavedMovies() {
     React.useEffect(() => {
         const v = localStorage.getItem('searchSavedMovieName')
         setValueM(v)
-        const savedMovies = JSON.parse(localStorage.getItem('foundSavedMovies'))
-        if (savedMovies) {
-            setMovies(savedMovies)
-            setSearch(true)
-        }
+
+        try {
+            const savedMovies = JSON.parse(localStorage.getItem('foundSavedMovies'))
+            if (savedMovies) {
+                setMovies(savedMovies)
+                setSearch(true)
+            }
+        } catch {}
 
     }, []);
 

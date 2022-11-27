@@ -51,6 +51,7 @@ export default function Profile({ currentUser, signOut }) {
     });
   };
 
+
   return (
     <>
       <div className="profile">

@@ -9,22 +9,31 @@ export default function SearchForm(props) {
   props.setValueM(value)
 
   const filteredMovies = props.cards.filter(movie => {
+    console.log(movie.nameRU, value)
     return movie.nameRU.toLowerCase().includes(value.toLowerCase())
   })
 
   React.useEffect(() => {
     if (pathname === '/savedMovies') {
       const val = localStorage.getItem('searchSavedMovieName')
-      setValue(val)
 
-      const checked = JSON.parse(localStorage.getItem('shortSavedFilms'))
-      props.setChecked(checked)
+      if (val !== null) {
+        setValue(val)
+      }
+      try {
+        const checked = JSON.parse(localStorage.getItem('shortSavedFilms'))
+        props.setChecked(checked)
+      } catch { console.log("checked") }
     } else {
       const val = localStorage.getItem('searchMovieName')
-      setValue(val)
+      if (val !== null) {
+        setValue(val)
+      }
 
-      const checked = JSON.parse(localStorage.getItem('shortFilms'))
-      props.setChecked(checked)
+      try {
+        const checked = JSON.parse(localStorage.getItem('shortFilms'))
+        props.setChecked(checked)
+      } catch { console.log("checked") }
     }
   }, []);
 

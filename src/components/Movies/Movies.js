@@ -41,11 +41,16 @@ export default function Movies(props) {
     React.useEffect(() => {
         const v = localStorage.getItem('searchMovieName')
         setValueM(v)
-        const savedMovies = JSON.parse(localStorage.getItem('foundMovies'))
-        if (savedMovies) {
-            setMovies(savedMovies)
-            setSearch(true)
-        }
+
+        try {
+            const savedMovies = JSON.parse(localStorage.getItem('foundMovies') || '')
+            if (savedMovies) {
+                setMovies(savedMovies)
+                setSearch(true)
+            }
+        } catch {}
+
+
     }, []);
 
     return (
