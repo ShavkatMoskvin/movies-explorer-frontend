@@ -13,8 +13,8 @@ export default function Header({ loggedIn }) {
                 </Link>
                 {!loggedIn &&
                     <div className='header__item'>
-                        <a href='sign-up' className='header__link'>Регистрация</a>
-                        <a href='sign-in' className='header__link header__link-green'>Войти</a>
+                        <Link className='header__link' to="sign-up">Регистрация</Link>
+                        <Link className='header__link header__link-green' to="sign-in">Войти</Link>
                     </div>}
                 {loggedIn &&
                     <>

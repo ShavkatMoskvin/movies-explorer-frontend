@@ -39,7 +39,7 @@ export default function Login({ login, errorMessage }) {
                 <div class="login__labels-container">
                     <label class="login__label">
                         <span class="login__label-text">E-mail</span>
-                        <input placeholder="Введите почту" onChange={handleInputChange} name="email" class={`login__input ${errors.email ? 'login__error_input' : ''}`} type="email" required="" />
+                        <input placeholder="Введите почту" onChange={handleInputChange} pattern="[A-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" class={`login__input ${errors.email ? 'login__error_input' : ''}`} type="email" required="" />
                         <span class="login__error">{errors.email}</span>
                     </label>
                     <label class="login__label">

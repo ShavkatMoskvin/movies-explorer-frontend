@@ -1,16 +1,17 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 
 import './MoviesCardList.css'
 
 import MoviesCard from "../MoviesCard/MoviesCard";
 import api from "../../utils/MainApi";
 
-export default function MoviesCardList({ cards, shortedMovies }) {
+export default function MoviesCardList({ cards, shortedMovies, setVisibleOnButtonClick, currentVisibleOnButtonClick }) {
     const [windowWidth] = useWindowSize();
     const [numberOfFilms, setNumberOfFilms] = React.useState(0);
-    const [currentVisibleOnButtonClick, setVisibleOnButtonClick] = React.useState(0)
     const [savedCards, setSavedCards] = React.useState([])
     const shortMovies = cards.filter(card => card.duration < 60);
+    const { pathname } = useLocation();
 
     function useWindowSize() {
         const [size, setSize] = React.useState([0, 0]);
@@ -57,7 +58,6 @@ export default function MoviesCardList({ cards, shortedMovies }) {
 
     const renderNewCards = () => {
         const { visibleOnButtonClick } = calculateCards(windowWidth);
-
         setVisibleOnButtonClick(currentVisibleOnButtonClick + visibleOnButtonClick);
     };
 
@@ -72,17 +72,27 @@ export default function MoviesCardList({ cards, shortedMovies }) {
         setNumberOfFilms(visibleCards)
     }, [windowWidth]);
 
+    const foundMovies = JSON.parse(localStorage.getItem('foundMovies'))
+ 
     return (
         <section className="movies-card-list">
             <div className="movies-card-list__box">
                 <ul className="movies-card__list">
-                    {(shortedMovies ? shortMovies.slice(0, numberOfFilms + currentVisibleOnButtonClick) : cards.slice(0, numberOfFilms + currentVisibleOnButtonClick)).map((card) => (
-                        <MoviesCard key={card.id} setSavedCards={setSavedCards} savedCards={savedCards} card={card} />
-                    ))}
+                    {(pathname !== '/savedMovies' ? <>
+                        {(shortedMovies ? shortMovies.slice(0, numberOfFilms + currentVisibleOnButtonClick) : cards.slice(0, numberOfFilms + currentVisibleOnButtonClick)).map((card) => (
+                            <MoviesCard key={card.id} setSavedCards={setSavedCards} savedCards={savedCards} card={card} />
+                        ))}
+                    </> : <>
+                        {(shortedMovies ? shortMovies : cards).map((card) => (
+                            <MoviesCard key={card.id} setSavedCards={setSavedCards} savedCards={savedCards} card={card} />
+                        ))}
+                    </>
+                    )}
+                    {(pathname !== '/savedMovies' && (numberOfFilms + currentVisibleOnButtonClick) < foundMovies.length ?
+                        <button onClick={renderNewCards} type="button" className="movies-card-list__box-button">
+                            Ещё
+                        </button> : '')}
                 </ul>
-                <button onClick={renderNewCards} type="button" className="movies-card-list__box-button">
-                    Ещё
-                </button>
             </div>
         </section>
     );

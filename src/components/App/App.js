@@ -25,7 +25,6 @@ function App() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    getUserInfo()
     apiMovies.getMovies()
       .then((cards) => {
         setCards(cards)
@@ -33,12 +32,18 @@ function App() {
       .catch((err) => {
         console.error(err.status, err.statusText)
       })
+    getUserInfo()
   }, []);
+
   function getUserInfo() {
     api.getUserInfo()
       .then((data) => {
+        setLoggedIn(true)
         setCurrentUser(data);
-        setLoggedIn(true);
+        if (localStorage.getItem('jwt') == null) {
+          console.log(2, localStorage.getItem('jwt'));
+          setLoggedIn(false)
+        }
       })
       .catch((err) => {
         console.log(err.status, err.statusText);
@@ -50,6 +55,7 @@ function App() {
       .then(({ token }) => {
         if (token) {
           localStorage.setItem('jwt', token);
+          api.updateToken(token)
           setLoggedIn(true);
           navigate('/movies');
           getUserInfo();
@@ -71,7 +77,7 @@ function App() {
       })
       .catch((res) => {
         if (res.status === 400) {
-          setErrorMessage(`Oшибка: ${res.status}. Неверный логин или пароль`);
+          setErrorMessage(`Oшибка: ${res.status}. Невалидный логин или пароль`);
         } else {
           setErrorMessage(`Oшибка: ${res.status}. Что-то пошло не так`);
         }
@@ -79,11 +85,16 @@ function App() {
   }
 
   function signOut() {
-    setLoggedIn(false);
     localStorage.removeItem('jwt');
+    localStorage.removeItem('foundSavedMovies');
+    localStorage.removeItem('searchSavedMovieName');
+    localStorage.removeItem('shortSavedFilms');
+    localStorage.removeItem('foundMovies');
+    localStorage.removeItem('searchMovieName');
+    localStorage.removeItem('shortFilms');
+    setLoggedIn(false);
     navigate('/')
   }
-
 
   return (
     <div className="App">
@@ -111,7 +122,7 @@ function App() {
         <Route path="/movies"
           element={<>
             <Header loggedIn={loggedIn} />
-            <ProtectedRoute component={Movies} cards={cards} loggedIn={loggedIn}/>
+            <ProtectedRoute component={Movies} cards={cards} loggedIn={loggedIn} />
             <Footer />
           </>}>
         </Route>
@@ -119,14 +130,15 @@ function App() {
         <Route path="/profile"
           element={<>
             <Header loggedIn={loggedIn} />
-            <ProtectedRoute component={Profile} currentUser={currentUser} signOut={signOut} loggedIn={loggedIn}/>
+            <ProtectedRoute component={Profile} currentUser={currentUser} signOut={signOut} loggedIn={loggedIn} />
           </>}>
         </Route>
 
         <Route path="/savedMovies"
           element={<>
             <Header loggedIn={loggedIn} />
-            <ProtectedRoute component={SavedMovies} loggedIn={loggedIn}/>
+            <ProtectedRoute component={SavedMovies} loggedIn={loggedIn} />
+            <Footer />
           </>}>
         </Route>
         <Route path="*"

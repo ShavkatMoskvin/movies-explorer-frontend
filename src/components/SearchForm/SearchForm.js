@@ -1,16 +1,32 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"
-
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import './SearchForm.css';
 
 export default function SearchForm(props) {
   const [value, setValue] = useState('')
   const { pathname } = useLocation();
+  props.setValueM(value)
 
   const filteredMovies = props.cards.filter(movie => {
-      return movie.nameRU.toLowerCase().includes(value.toLowerCase())
+    return movie.nameRU.toLowerCase().includes(value.toLowerCase())
   })
+
+  React.useEffect(() => {
+    if (pathname === '/savedMovies') {
+      const val = localStorage.getItem('searchSavedMovieName')
+      setValue(val)
+
+      const checked = JSON.parse(localStorage.getItem('shortSavedFilms'))
+      props.setChecked(checked)
+    } else {
+      const val = localStorage.getItem('searchMovieName')
+      setValue(val)
+
+      const checked = JSON.parse(localStorage.getItem('shortFilms'))
+      props.setChecked(checked)
+    }
+  }, []);
 
   return (
     <section className="search-form">
@@ -20,6 +36,7 @@ export default function SearchForm(props) {
       }}>
         <div className="search-form__icon"></div>
         <input
+          value={value}
           onChange={(e) => setValue(e.target.value)}
           className="search-form__search_input"
           type="text"
@@ -32,7 +49,7 @@ export default function SearchForm(props) {
       <div className="search-form__switch">
 
         <label className="search-form__switch_label">
-          <input onChange={props.checkbox} className="search-form__switch_input" type="checkbox"></input>
+          <input checked={props.checked} onChange={props.checkbox} className="search-form__switch_input" type="checkbox"></input>
           <div className="search-form__switch_div"></div>
         </label>
 

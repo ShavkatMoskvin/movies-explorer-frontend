@@ -1,32 +1,54 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import api from '../../utils/MainApi'
+import isEmail from 'validator/es/lib/isEmail';
 import "./Profile.css"
 
 export default function Profile({ currentUser, signOut }) {
   const [name, enterName] = useState(currentUser.name);
   const [email, enterEmail] = useState(currentUser.email);
   const [errorMessage, setErrorMessage] = useState();
+  const [successMessage, setSuccessMessage] = useState()
+  const [isValid, setIsValid] = useState(true)
 
   useEffect(() => {
-    enterName(currentUser.name)
-    enterEmail(currentUser.email)
+    api.getUserInfo()
+      .then((user) => {
+        enterName(user.name)
+        enterEmail(user.email)
+      })
+    console.log()
   }, [currentUser])
 
-  function handleChangeProfileName(evt) {
-    enterName(evt.target.value);
-  }
+  const handleInputChange = (e) => {
+    const target = e.target
+    const type = e.target.name
+    const value = e.target.value
 
-  function handleChangeProfileEmail(evt) {
-    enterEmail(evt.target.value);
+    if (target === 'email') {
+      if (!isEmail(value)) {
+        target.setCustomValidity(validationEmailErrorMessage);
+      } else {
+        target.setCustomValidity('');
+      }
+    }
+    setIsValid(target.closest('form').checkValidity());
+    if (type === "name") {
+      enterName(value)
+    } else {
+      enterEmail(value)
+    }
   }
 
   function handleSubmit(evt) {
     evt.preventDefault();
     api.setUserInfo({ name, email })
+      .then(() => {
+        setSuccessMessage('Данные изменены!')
+        setTimeout(() => setSuccessMessage(''), 5000)
+      })
       .catch((err) => {
-        setErrorMessage(`Oшибка: ${err.status}. Что-то пошло не так!`)
-      });
+      setErrorMessage(`Oшибка: ${err.status}. Что-то пошло не так!`)
+    });
   };
 
   return (
@@ -46,7 +68,7 @@ export default function Profile({ currentUser, signOut }) {
               minLength="3"
               maxLength="40"
               required
-              onChange={handleChangeProfileName}
+              onChange={handleInputChange}
             />
           </div>
           <div className="profile__input">
@@ -61,11 +83,13 @@ export default function Profile({ currentUser, signOut }) {
               minLength="5"
               maxLength="40"
               required
-              onChange={handleChangeProfileEmail}
+              onChange={handleInputChange}
             />
           </div>
+          <span className="profile__success">{successMessage}</span>
           <span className="profile__error">{errorMessage}</span>
           <button
+            disabled={!isValid}
             className="profile__button"
             type="submit"
             aria-label=""

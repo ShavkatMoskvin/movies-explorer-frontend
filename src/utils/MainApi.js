@@ -6,16 +6,6 @@ class Api {
         this._token = token;
     }
 
-    getToken(token) {
-        return fetch(`${this._address}/users/me`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }).then(this._handleOriginalResponse);
-      }
-
     registerUser(data) {
         return fetch(`${this._address}/signup`, {
             method: 'POST',
@@ -98,6 +88,10 @@ class Api {
             },
         }).then(this._handleOriginalResponse);
     }
+
+    updateToken() {
+        this._token = `Bearer ${localStorage.getItem('jwt')}`;
+      }
 
     _handleOriginalResponse(res) {
         if (res.ok) {
