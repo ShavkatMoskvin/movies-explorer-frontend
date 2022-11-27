@@ -9,7 +9,6 @@ export default function SearchForm(props) {
   props.setValueM(value)
 
   const filteredMovies = props.cards.filter(movie => {
-    console.log(movie.nameRU, value)
     return movie.nameRU.toLowerCase().includes(value.toLowerCase())
   })
 
