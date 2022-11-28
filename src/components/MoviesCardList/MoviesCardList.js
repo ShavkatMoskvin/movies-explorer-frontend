@@ -72,16 +72,8 @@ export default function MoviesCardList({ cards, shortedMovies, setVisibleOnButto
         setNumberOfFilms(visibleCards)
     }, [windowWidth]);
 
-    const foundMovies = () => {
-        try {
-            console.log('good')
-            return JSON.parse(localStorage.getItem('foundMovies') || '');
-        } catch (error) {
-            console.log('bad')
-            return null;
-        } 
-    }
- 
+    console.log(numberOfFilms, currentVisibleOnButtonClick)
+
     return (
         <section className="movies-card-list">
             <div className="movies-card-list__box">
@@ -96,11 +88,12 @@ export default function MoviesCardList({ cards, shortedMovies, setVisibleOnButto
                         ))}
                     </>
                     )}
-                    {(pathname !== '/savedMovies' && (numberOfFilms + currentVisibleOnButtonClick) < foundMovies.length ?
-                        <button onClick={renderNewCards} type="button" className="movies-card-list__box-button">
-                            Ещё
-                        </button> : '')}
+
                 </ul>
+                {(pathname !== '/savedMovies' && (numberOfFilms + currentVisibleOnButtonClick) < cards.length ?
+                    <button onClick={renderNewCards} type="button" className="movies-card-list__box-button">
+                        Ещё
+                    </button> : '')}
             </div>
         </section>
     );
