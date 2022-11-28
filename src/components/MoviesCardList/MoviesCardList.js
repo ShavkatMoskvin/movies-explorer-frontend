@@ -72,8 +72,6 @@ export default function MoviesCardList({ cards, shortedMovies, setVisibleOnButto
         setNumberOfFilms(visibleCards)
     }, [windowWidth]);
 
-    console.log(numberOfFilms, currentVisibleOnButtonClick)
-
     return (
         <section className="movies-card-list">
             <div className="movies-card-list__box">
